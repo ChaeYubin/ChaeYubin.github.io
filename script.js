@@ -85,3 +85,99 @@ for (let i = 0; i < scrollMoveEl.length; i++) {
     animationMove(target);
   });
 }
+
+/* 버블 넣기 */
+const root = document.querySelector("#bubble");
+let innerHeight = document.getElementById("about").clientHeight;
+let innerWidth = document.getElementById("about").clientWidth;
+
+// 화면 너비 변경이 감지되었을 때
+window.onresize = function () {
+  setBubbleBackgroundSize();
+};
+
+function setBubbleBackgroundSize() {
+  console.log("화면 너비 변경됨");
+  innerHeight = document.getElementById("about").clientHeight;
+  innerWidth = document.getElementById("about").clientWidth;
+  console.log(innerHeight, innerWidth);
+}
+
+class Bubble {
+  constructor() {
+    this.bubbleSpan = undefined;
+    this.handleNewBubble(); // 새로운 버블 생성
+    this.color = this.randomColor(); // 배경색상 랜덤으로 설정
+    // this.color = "red";
+
+    // 버블의 크기 세팅
+    this.height = this.randomNumber(60, 20); // 버블 크기는 20~60px
+    this.width = this.height;
+
+    this.posY = this.randomNumber(innerHeight, 20);
+    this.posX = this.randomNumber(innerWidth - 2 * this.width, 20);
+
+    this.bubbleSpan.style.top = this.posY + "px";
+    this.bubbleSpan.style.left = this.posX + "px";
+
+    this.bubbleEnd.call(this.bubbleSpan, this.randomNumber(6000, 3000)); // 버블 삭제는 3~6초가 걸림
+  }
+
+  // DOM에 새로운 버블을 그린다.
+  handleNewBubble() {
+    this.bubbleSpan = document.createElement("span");
+    this.bubbleSpan.classList.add("bubble");
+    root.append(this.bubbleSpan);
+    this.handlePosition();
+  }
+
+  // 버블 여러개의 위치를 핸들링하는 함수
+  handlePosition() {
+    // 생성자에서 랜덤으로 지정된 배경색, 크기로 설정
+    this.bubbleSpan.style.backgroundColor = this.color;
+    this.bubbleSpan.style.height = this.height + "px";
+    this.bubbleSpan.style.width = this.height + "px";
+
+    // 버블을 그릴 위치를 구한다.
+    this.posX = this.randomNumber(innerWidth - 2 * this.width, 20);
+    this.posY = this.randomNumber(innerHeight - this.height, 20);
+
+    // 위에서 구한 위치로 이동시키기
+    this.bubbleSpan.style.top = this.posY + "px";
+    this.bubbleSpan.style.left = this.posX + "px";
+
+    // 랜덤한 시간마다 다시 포지셔닝한다.
+    const randomSec = this.randomNumber(5000, 3500);
+    setTimeout(this.handlePosition.bind(this), randomSec); // re-position
+  }
+
+  bubbleEnd(removingTime = 0) {
+    setTimeout(
+      () => {
+        requestAnimationFrame(() => this.classList.add("bubble--bust"));
+      },
+      removingTime === 0 ? removingTime : removingTime - 100
+    );
+
+    setTimeout(() => {
+      requestAnimationFrame(() => this.remove());
+      requestAnimationFrame(() => new Bubble());
+    }, removingTime);
+  }
+
+  randomNumber(max, min) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  randomColor() {
+    return `rgba(
+        ${this.randomNumber(0, 255)},
+        ${this.randomNumber(0, 255)},
+        ${this.randomNumber(0, 255)}, 
+        ${this.randomNumber(0.1, 1)})`;
+  }
+}
+
+setInterval(function () {
+  requestAnimationFrame(() => new Bubble());
+}, 3000);
