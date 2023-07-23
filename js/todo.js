@@ -11,25 +11,48 @@ function saveToDos() {
 }
 
 function deleteToDo(e) {
-  const li = e.target.parentElement;
+  const li = e.target.parentElement.parentElement;
   li.remove();
   toDos = toDos.filter((todo) => todo.id.toString() !== li.id);
+  saveToDos();
+}
+
+function successToDo(e) {
+  const li = e.target.parentElement.parentElement;
+  li.classList.toggle("success");
+  toDos = toDos.map((todo) => {
+    if (todo.id.toString() === li.id) {
+      let res = todo.success ? false : true;
+      return { ...todo, success: res };
+    }
+    return todo;
+  });
   saveToDos();
 }
 
 function paintToDo(newTodo) {
   const li = document.createElement("li");
   li.id = newTodo.id;
+  li.classList.add("todo-list");
 
   const span = document.createElement("span");
   span.innerText = newTodo.text;
 
-  const button = document.createElement("button");
-  button.innerText = "❌";
-  button.addEventListener("click", deleteToDo);
+  const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("todo-button-container");
+
+  const successButton = document.createElement("button");
+  successButton.innerText = "✅";
+  successButton.addEventListener("click", successToDo);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "❌";
+  deleteButton.addEventListener("click", deleteToDo);
 
   li.appendChild(span);
-  li.appendChild(button);
+  li.appendChild(buttonDiv);
+  buttonDiv.appendChild(deleteButton);
+  buttonDiv.appendChild(successButton);
   toDolist.appendChild(li);
 }
 
@@ -41,6 +64,7 @@ function handleToDoSubmit(e) {
   const newTodoObj = {
     id: Date.now(),
     text: newTodo,
+    success: false,
   };
 
   toDos.push(newTodoObj);

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/todo.css" />
+    <title>Momentum App</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content-container">
+        <div id="info-container">
+          <h2 id="clock">
+            <span></span>
+            <span></span>
+          </h2>
+          <div id="quote">
+            <span></span>
+          </div>
+          <div id="weather">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div id="todo-container">
+          <form id="todo-form">
+            <input
+              type="text"
+              placeholder="Write a todo..."
+              required
+              class="todo-input-box"
+              autofocus
+            />
+          </form>
+          <hr />
+          <ul id="todo-list"></ul>
+        </div>
+      </div>
+    </div>
+    <script src="js/clock.js"></script>
+    <script src="js/quotes.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/todo.js"></script>
+    <script src="js/weather.js"></script>
+  </body>
+</html>
