@@ -6,8 +6,8 @@ function onGeoOk(position) {
 
   console.log("You live it", lat, lon);
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
-  fetch(url)
+  const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+  fetch(currentWeatherUrl)
     .then((response) => response.json())
     .then((data) => {
       const weather = document.querySelector("#weather span:first-child");
@@ -15,6 +15,10 @@ function onGeoOk(position) {
       weather.innerText = `${data.weather[0].main} / ${data.main.temp}`;
       city.innerText = data.name;
     });
+
+  const forecastWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+  fetch(forecastWeatherUrl).then((response) => response.json());
+  // .then((res) => console.log(res.list));
 }
 
 function onGeoError() {
